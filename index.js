@@ -15,8 +15,13 @@ import multer from "multer";
 
 const upload = multer({ dest: "uploads/" });
 const app = express();
-app.options("*", cors());
 app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 //login
 app.post("/login", (req, res) => {
