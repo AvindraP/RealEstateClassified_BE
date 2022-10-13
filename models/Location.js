@@ -5,6 +5,7 @@ import db from "../config/DB.js";
 const District = {
   table: "location",
   schema: {
+    province: { type: "string", optional: "false" },
     city: { type: "string", optional: "false" },
     district: { type: "string", optional: "false" },
   },
