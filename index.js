@@ -204,6 +204,11 @@ app.get("/add/total/active", (req, res) => {
   Add.totalActive(req, res);
 });
 
+// banner
+app.post("/banner", (req, res) => {
+  Banner.insert(req, res);
+});
+
 app.listen("8001", () => {
   console.log("connected!");
 });
