@@ -4,7 +4,7 @@ import mysql from 'mysql'
 const db = mysql.createConnection({
     host: "localhost",
     user: "root",
-    database: "adsapplk",
+    database: "real_estate",
 });
 
 db.connect((err) => {

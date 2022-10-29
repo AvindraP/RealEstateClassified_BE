@@ -2,7 +2,7 @@ const Auth = {
     table: "users",
 
     login(req, res) {
-        res.send(req.body)
+        res.send({msg: "working"})
     }
 }
 
