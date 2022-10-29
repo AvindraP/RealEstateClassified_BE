@@ -6,7 +6,6 @@ const SubCategory = {
     table: "sub_categories",
 
     schema: {
-        category_id: {type: "number", optional: "false"},
         name: {type: "string", optional: "false"},
     },
 
@@ -49,7 +48,7 @@ const SubCategory = {
             arr.push(data[key]);
         });
         const query = `INSERT INTO ${SubCategory.table} (${keys.toString()})
-                       VALUES (?, ?, ?)`;
+                       VALUES (?, ?)`;
         db.query(query, arr, (err, result) => {
             err
                 ? console.log(err)
@@ -57,6 +56,16 @@ const SubCategory = {
                 ? callBack(result.insertId)
                 : callBack(false);
         });
+    },
+
+    changeStatus(req, res) {
+        const id = req.body.id
+        const status = req.body.status
+
+        const query = `UPDATE ${SubCategory.table}
+                       SET is_active = ${status}
+                       WHERE id = ${id}`
+        db.query(query, (err, response) => res.send({message: "Updated"}))
     },
 
     get: {
@@ -86,6 +95,18 @@ const SubCategory = {
                     : res.send({results: []});
             });
         },
+    },
+
+    patch(req, res) {
+        const category = req.body;
+        const id = category.id;
+        const query = `UPDATE ${SubCategory.table}
+                       SET name = '${category.name}'
+                       WHERE id = ${id}`;
+        db.query(query, (err, response) => {
+            if (err) console.log(err);
+            else res.send({message: "Success"})
+        });
     },
 
     delete(req, res) {
