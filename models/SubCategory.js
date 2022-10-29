@@ -1,142 +1,105 @@
-import validator from 'fastest-validator'
-import validate from '../request/SubCategoryPostRequest.js';
+import convert from "../helpers/convert.js";
+import validate from "../helpers/validate.js";
 import db from "../config/DB.js";
-import status from '../helpers/status.js'
 
-const Category = {
+const SubCategory = {
     table: "sub_categories",
 
     schema: {
         category_id: {type: "number", optional: "false"},
-        fields: {type: "string", optional: "false"},
         name: {type: "string", optional: "false"},
     },
 
     create(req, res) {
-        const keys = Object.keys(req.body)
-        const arr = []
-        let user = []
-
-        keys.forEach(key => {
-            arr.push(req.body[key])
+        const subCategory = convert.body(req.body)
+        validate.fieldRequired(subCategory, SubCategory.schema, (response) => {
+            response && response.length > 0
+                ? res.send(response)
+                : validate.all(subCategory, SubCategory.table, (response) => {
+                    response
+                        ? res.send(response)
+                        : validate.unique(
+                        "name",
+                        SubCategory.table,
+                        req.body.name,
+                        (response) => {
+                            response
+                                ? res
+                                    .status(500)
+                                    .send({
+                                        message: `this name has already been taken`,
+                                    })
+                                : SubCategory.insert(subCategory, (response) =>
+                                    response
+                                        ? res.send({message: "success"})
+                                        : res
+                                            .status(500)
+                                            .send({message: "something went wrong"})
+                                );
+                        }
+                        );
+                });
         })
-
-        keys.forEach(key => {
-            let obj = {}
-            obj[key] = req.body[key]
-            user.push(obj)
-        })
-
-        user = Object.assign({}, ...user)
-
-        const v = new validator()
-        const validateResponse = v.validate(user, this.schema)
-
-        if (validateResponse && validateResponse.length > 0) {
-            res.send(validateResponse)
-        } else {
-            validate.uniqueName(req.body.name, (r) => {
-                r ? res.send("this name has been already taken") : this.insert(req.body, (r) => {
-                    r ? res.send(`add ${r.insertId}`) : res.send("Something went wrong")
-                })
-            })
-        }
     },
 
     insert(data, callBack) {
-        const keys = ["category_id", "fields", "name"]
-        const arr = []
-        keys.forEach(key => {
-            arr.push(data[key])
-        })
-        const query = `INSERT INTO ${this.table} (${keys.toString()})
-                       VALUES (?, ?, ?)`
-        db.query(query, arr, (err, res) => {
-            if (err) console.log(err)
-            else {
-                res ? callBack(res) : callBack(false)
-            }
-        })
+        const keys = Object.keys(data);
+        const arr = [];
+        keys.forEach((key) => {
+            arr.push(data[key]);
+        });
+        const query = `INSERT INTO ${SubCategory.table} (${keys.toString()})
+                       VALUES (?, ?, ?)`;
+        db.query(query, arr, (err, result) => {
+            err
+                ? console.log(err)
+                : result
+                ? callBack(result.insertId)
+                : callBack(false);
+        });
     },
 
-    get(req, res) {
-        const id = req.param('id')
-
-        if (id) {
+    get: {
+        all(req, res) {
             const query = `SELECT *
-                           FROM ${this.table}
-                           WHERE id = ${id}`
+                           FROM ${SubCategory.table}`;
             db.query(query, (err, results) => {
-                if (err) res.send(err)
-                else res.send(results)
-            })
-        } else {
+                err
+                    ? res.status(500).send(err)
+                    : results.length > 0
+                    ? res.send({results})
+                    : res.send({results: []});
+            });
+        },
+
+        one(req, res) {
+            const id = req.params.id;
             const query = `SELECT *
-                           FROM ${this.table}`
+                           FROM ${SubCategory.table}
+                           WHERE id = ${id}`;
+
             db.query(query, (err, results) => {
-                if (err) res.send(err)
-                else res.send(results)
-            })
-        }
+                err
+                    ? res.status(500).send(err)
+                    : results.length > 0
+                    ? res.send({results})
+                    : res.send({results: []});
+            });
+        },
     },
 
-    update(req, res) {
-        const keys = Object.keys(req.body)
-        const arr = []
-        let user = []
-
-        keys.forEach(key => {
-            arr.push(req.body[key])
-        })
-
-        keys.forEach(key => {
-            let obj = {}
-            obj[key] = req.body[key]
-            user.push(obj)
-        })
-
-        user = Object.assign({}, ...user)
-
-        const v = new validator()
-        const validateResponse = v.validate(user, this.schema)
-
-        if (validateResponse && validateResponse.length > 0) {
-            res.send(validateResponse)
-        } else {
-            validate.uniqueName(req.body.name, (r) => {
-                r ? res.send("This name has already been taken") : update(req.body, (r) => {
-                    r ? res.send("done") : res.send("Something went wrong")
-                })
-            }, req.body.id)
-        }
-
-        const update = (data, callBack) => {
-
-            const query = `UPDATE ${this.table}
-                           SET category_id=${data.category_id},
-                               fields='${data.fields}',
-                               name='${data.name}'
-                           WHERE id = ${data.id}`
-            db.query(query, (err, res) => {
-                if (err) console.log(err)
-                else res ? callBack(true) : callBack(false)
-            })
-        }
+    delete(req, res) {
+        const id = req.body.id;
+        const query = `DELETE
+                       FROM ${SubCategory.table}
+                       WHERE id = ${id}`;
+        db.query(query, (err, results) => {
+            if (err) console.log(err);
+            results
+                ? res.send({message: "success"})
+                : res.status(500).send({message: "Something went wrong!"});
+        });
     },
+};
 
-    block(req, res) {
-        const id = req.param('id')
-        status.block(id, this.table, (r) => {
-            r ? res.send("blocked") : res.send("something went wrong")
-        })
-    },
-
-    active(req, res) {
-        const id = req.param('id')
-        status.active(id, this.table, (r) => {
-            r ? res.send("activated") : res.send("something went wrong")
-        })
-    }
-}
-
-export default Category
+export default SubCategory;
