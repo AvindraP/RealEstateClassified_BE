@@ -19,6 +19,8 @@ app.post("/sub-category", SubCategory.create);
 app.get("/sub-category", SubCategory.get.all);
 app.get("/sub-category/:id", SubCategory.get.one);
 app.delete("/sub-category", SubCategory.delete)
+app.post("/sub-category/status", SubCategory.changeStatus);
+app.post("/sub-category/update", SubCategory.patch);
 
 app.listen("8001", () => {
     console.log("connected!");
