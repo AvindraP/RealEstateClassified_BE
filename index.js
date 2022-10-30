@@ -1,9 +1,10 @@
 import express from "express";
 import cors from "cors";
 import SubCategory from "./models/SubCategory.js";
+import Category from "./models/Category.js";
 import multer from "multer";
+import Upload from "./helpers/upload.js";
 
-const upload = multer({dest: "uploads/"});
 const app = express();
 app.use(
     cors({
@@ -13,6 +14,13 @@ app.use(
     })
 );
 app.use(express.json());
+const upload = multer({dest: "uploads/"});
+
+// category
+app.post("/category", upload.single("image"), Category.create)
+app.get("/category", Category.get.all)
+app.get("/category/:id", Category.get.one)
+app.get("/category-image/:image", Upload.show)
 
 // sub category
 app.post("/sub-category", SubCategory.create);
