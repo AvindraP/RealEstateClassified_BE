@@ -60,7 +60,7 @@ const Category = {
                             const arr = []
                             subCategoryIds.forEach(id => {
                                 const index = subCategories.findIndex(sCat => sCat.id === parseInt(id))
-                                index >= 0 && arr.push(subCategories[index].name)
+                                index >= 0 && arr.push(subCategories[index])
                             })
                             category.sub_categories = arr
                         })
@@ -86,7 +86,7 @@ const Category = {
                             const arr = []
                             subCategoryIds.forEach(id => {
                                 const index = subCategories.findIndex(sCat => sCat.id === parseInt(id))
-                                index >= 0 && arr.push(subCategories[index].name)
+                                index >= 0 && arr.push(subCategories[index])
                             })
                             category.sub_categories = arr
                         })
