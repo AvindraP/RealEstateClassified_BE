@@ -30,7 +30,7 @@ const SubCategory = {
                                     })
                                 : SubCategory.insert(subCategory, (response) =>
                                     response
-                                        ? res.send({message: "success"})
+                                        ? res.send({message: "success", results: response})
                                         : res
                                             .status(500)
                                             .send({message: "something went wrong"})
@@ -50,11 +50,20 @@ const SubCategory = {
         const query = `INSERT INTO ${SubCategory.table} (${keys.toString()})
                        VALUES (?, ?)`;
         db.query(query, arr, (err, result) => {
-            err
-                ? console.log(err)
-                : result
-                ? callBack(result.insertId)
-                : callBack(false);
+            if (err) console.log(err)
+            else {
+                const id = result.insertId
+                const query = `SELECT *
+                               FROM ${SubCategory.table}
+                               WHERE id = ${id}`;
+
+                db.query(query, (err, results) => {
+                    if (err) console.log(err)
+                    else {
+                        callBack(results)
+                    }
+                });
+            }
         });
     },
 
