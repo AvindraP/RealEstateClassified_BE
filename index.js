@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import SubCategory from "./models/SubCategory.js";
 import Category from "./models/Category.js";
+import Province from "./models/Province.js";
+import District from "./models/District.js";
+import City from "./models/City.js";
 import multer from "multer";
 import Upload from "./helpers/upload.js";
 
@@ -33,6 +36,24 @@ app.get("/sub-category/:id", SubCategory.get.one);
 app.delete("/sub-category", SubCategory.delete)
 app.post("/sub-category/status", SubCategory.changeStatus);
 app.post("/sub-category/update", SubCategory.patch);
+
+// provinces
+app.post("/province", Province.create)
+app.get("/province", Province.get.all)
+app.get("/province/:id", Province.get.one)
+app.post("/province/update", Province.patch)
+
+// districts
+app.post("/district", District.create)
+app.get("/district", District.get.all)
+app.get("/district/:id", District.get.one)
+app.post("/district/update", District.patch)
+
+// cities
+app.post("/city", City.create)
+app.get("/city", City.get.all)
+app.get("/city/:id", City.get.one)
+app.post("/city/update", City.patch)
 
 app.listen("8001", () => {
     console.log("connected!");

@@ -19,9 +19,9 @@ const Category = {
         validate.unique("name", Category.table, category.name, (response) => {
             !response
                 ? Upload.image(req.file, (fileName) => {
-                    const stadium = req.body;
+                    const categories = req.body;
                     category["image"] = "category-image/" + fileName;
-                    Category.insert(stadium, (response) => {
+                    Category.insert(categories, (response) => {
                         response
                             ? res.status(200).send({message: "success", results: response})
                             : res
