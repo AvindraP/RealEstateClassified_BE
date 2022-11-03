@@ -7,6 +7,7 @@ import District from "./models/District.js";
 import City from "./models/City.js";
 import multer from "multer";
 import Upload from "./helpers/upload.js";
+import Field from "./models/Field.js";
 
 const app = express();
 app.use(
@@ -54,6 +55,14 @@ app.post("/city", City.create)
 app.get("/city", City.get.all)
 app.get("/city/:id", City.get.one)
 app.post("/city/update", City.patch)
+
+// fields
+app.post("/field", Field.create)
+app.get("/field", Field.get.all)
+app.get("/field/:id", Field.get.one)
+app.post("/field/update", Field.patch)
+app.get("/field/status/:id/:status", Field.status)
+app.get("/field/require/:id/:status", Field.require)
 
 app.listen("8001", () => {
     console.log("connected!");
