@@ -83,8 +83,8 @@ const Province = {
 
     update(data, callBack) {
         const query = `UPDATE ${Province.table}
-                       SET name = '${data.name}',
-                           WHERE id = ${data.id}`
+                       SET name = '${data.name}'
+                       WHERE id = ${data.id}`
         db.query(query, (err, update) => {
             if (err) console.log(err)
             update.affectedRows === 1 ? callBack(true) : callBack(false)

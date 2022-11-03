@@ -37,9 +37,10 @@ const District = {
             if (err) console.log(err)
             else {
                 const id = result.insertId
-                const query = `SELECT *
+                const query = `SELECT ${District.table}.*, ${Province.table}.name AS 'province'
                                FROM ${District.table}
-                               WHERE id = ${id}`
+                                        JOIN ${Province.table} ON ${District.table}.province_id = ${Province.table}.id
+                               WHERE ${District.table}.id = ${id}`
                 db.query(query, (err, results) => {
                     if (err) console.log(err)
                     else callBack(results)
@@ -87,8 +88,7 @@ const District = {
 
     update(data, callBack) {
         const query = `UPDATE ${District.table}
-                       SET name        = '${data.name}',
-                           province_id = '${data.province_id}'
+                       SET name = '${data.name}'
                        WHERE id = ${data.id}`
         db.query(query, (err, update) => {
             if (err) console.log(err)
