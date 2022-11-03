@@ -38,9 +38,11 @@ const City = {
             if (err) console.log(err)
             else {
                 const id = result.insertId
-                const query = `SELECT *
+                const query = `SELECT ${City.table}.*, ${District.table}.name AS 'district', ${Province.table}.name AS 'province'
                                FROM ${City.table}
-                               WHERE id = ${id}`
+                                        JOIN ${District.table} ON ${City.table}.district_id = ${District.table}.id
+                                        JOIN ${Province.table} ON ${District.table}.province_id = ${Province.table}.id
+                               WHERE ${City.table}.id = ${id}`
                 db.query(query, (err, results) => {
                     if (err) console.log(err)
                     else callBack(results)
@@ -67,7 +69,7 @@ const City = {
                            FROM ${City.table}
                                     JOIN ${District.table} ON ${City.table}.district_id = ${District.table}.id
                                     JOIN ${Province.table} ON ${District.table}.province_id = ${Province.table}.id
-                           WHERE ${City.table}id = ${id}`
+                           WHERE ${City.table}.id = ${id}`
             db.query(query, (err, cities) => {
                 if (err) console.log(err)
                 else res.send({results: cities})
@@ -90,8 +92,7 @@ const City = {
 
     update(data, callBack) {
         const query = `UPDATE ${City.table}
-                       SET name        = '${data.name}',
-                           district_id = '${data.district_id}'
+                       SET name = '${data.name}'
                        WHERE id = ${data.id}`
         db.query(query, (err, update) => {
             if (err) console.log(err)
