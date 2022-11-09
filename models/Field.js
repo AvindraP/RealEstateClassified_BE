@@ -30,7 +30,7 @@ const Field = {
             arr.push(data[key]);
         });
         const query = `INSERT INTO ${Field.table} (${keys.toString()})
-                       VALUES (?, ?)`;
+                       VALUES (?, ?, ?, ?)`;
         db.query(query, arr, (err, result) => {
             if (err) console.log(err)
             else {
