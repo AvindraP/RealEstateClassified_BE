@@ -86,7 +86,8 @@ const Field = {
 
     update(data, callBack) {
         const query = `UPDATE ${Field.table}
-                       SET name = '${data.name}'
+                       SET name = '${data.name}',
+                           type = '${data.type}'
                        WHERE id = ${data.id}`
         db.query(query, (err, update) => {
             if (err) console.log(err)
