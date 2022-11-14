@@ -69,6 +69,17 @@ const Field = {
                 else res.send({results: fields})
             })
         },
+
+        subCategory(req, res) {
+            const id = req.params.id
+            const query = `SELECT *
+                           FROM ${Field.table}
+                           WHERE sub_category_id = ${id} AND is_active = 1`
+            db.query(query, (err, fields) => {
+                if (err) console.log(err)
+                else res.send({results: fields})
+            })
+        },
     },
 
     patch(req, res) {
