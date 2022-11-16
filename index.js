@@ -8,6 +8,7 @@ import City from "./models/City.js";
 import multer from "multer";
 import Upload from "./helpers/upload.js";
 import Field from "./models/Field.js";
+import Ads from "./models/Ads.js";
 
 const app = express();
 app.use(
@@ -64,6 +65,9 @@ app.get("/field/sub-category/:id", Field.get.subCategory)
 app.post("/field/update", Field.patch)
 app.get("/field/status/:id/:status", Field.status)
 app.get("/field/require/:id/:status", Field.require)
+
+// ads
+// app.post("/ads", upload.any("images"), Ads.create)
 
 app.listen("8001", () => {
     console.log("connected!");
