@@ -67,7 +67,14 @@ app.get("/field/status/:id/:status", Field.status)
 app.get("/field/require/:id/:status", Field.require)
 
 // ads
-// app.post("/ads", upload.any("images"), Ads.create)
+app.post("/ads", upload.any("images"), Ads.create)
+app.get("/ads", Ads.get.all)
+app.get("/ads/published", Ads.get.published)
+app.get("/ads/un-published", Ads.get.unPublished)
+app.get("/ads/approved", Ads.get.approved)
+app.get("/ads/pending", Ads.get.pending)
+app.get("/ads/top", Ads.get.top)
+app.get("/ads/hidden", Ads.get.hidden)
 
 app.listen("8001", () => {
     console.log("connected!");
