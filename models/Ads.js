@@ -2,6 +2,8 @@ import db from "../config/DB.js";
 import Upload from "../helpers/upload.js";
 import AdsDetails from "./AdsDetails.js";
 import PriceDetails from "./PriceDetails.js";
+import SubCategory from "./SubCategory.js";
+import Advertisers from "./Advertisers.js";
 
 const Ads = {
     table: "ads",
@@ -36,6 +38,127 @@ const Ads = {
                 callBack(id)
             }
         })
+    },
+
+    get: {
+        all(req, res) {
+            const query = `SELECT ${Ads.table}.*,
+                                  ${Advertisers.table}.*,
+                                  ${AdsDetails.table}.*,
+                                  ${PriceDetails.table}.*,
+                                  ${SubCategory.table}.name as 'sub_category'
+                           FROM ${Ads.table}
+                                    JOIN ${AdsDetails.table} ON ${Ads.table}.id = ${AdsDetails.table}.ad_id
+                                    JOIN ${PriceDetails.table} ON ${Ads.table}.id = ${PriceDetails.table}.ad_id
+                                    JOIN ${SubCategory.table} ON ${Ads.table}.sub_category_id = ${SubCategory.table}.id
+                                    JOIN ${Advertisers.table} ON ${Ads.table}.user_id = ${Advertisers.table}.user_id`
+            db.query(query, (err, ads) => {
+                if (err) console.log(err)
+                res.send({results: ads})
+            })
+        },
+        published(req, res) {
+            const query = `SELECT ${Ads.table}.*,
+                                  ${Advertisers.table}.*,
+                                  ${AdsDetails.table}.*,
+                                  ${PriceDetails.table}.*,
+                                  ${SubCategory.table}.name as 'sub_category'
+                           FROM ${Ads.table}
+                                    JOIN ${AdsDetails.table} ON ${Ads.table}.id = ${AdsDetails.table}.ad_id
+                                    JOIN ${PriceDetails.table} ON ${Ads.table}.id = ${PriceDetails.table}.ad_id
+                                    JOIN ${SubCategory.table} ON ${Ads.table}.sub_category_id = ${SubCategory.table}.id
+                                    JOIN ${Advertisers.table} ON ${Ads.table}.user_id = ${Advertisers.table}.user_id
+                           WHERE ${Ads.table}.is_published = 1`
+            db.query(query, (err, ads) => {
+                if (err) console.log(err)
+                res.send({results: ads})
+            })
+        },
+        unPublished(req, res) {
+            const query = `SELECT ${Ads.table}.*,
+                                  ${Advertisers.table}.*,
+                                  ${AdsDetails.table}.*,
+                                  ${PriceDetails.table}.*,
+                                  ${SubCategory.table}.name as 'sub_category'
+                           FROM ${Ads.table}
+                                    JOIN ${AdsDetails.table} ON ${Ads.table}.id = ${AdsDetails.table}.ad_id
+                                    JOIN ${PriceDetails.table} ON ${Ads.table}.id = ${PriceDetails.table}.ad_id
+                                    JOIN ${SubCategory.table} ON ${Ads.table}.sub_category_id = ${SubCategory.table}.id
+                                    JOIN ${Advertisers.table} ON ${Ads.table}.user_id = ${Advertisers.table}.user_id
+                           WHERE ${Ads.table}.is_published = 0`
+            db.query(query, (err, ads) => {
+                if (err) console.log(err)
+                res.send({results: ads})
+            })
+        },
+        approved(req, res) {
+            const query = `SELECT ${Ads.table}.*,
+                                  ${Advertisers.table}.*,
+                                  ${AdsDetails.table}.*,
+                                  ${PriceDetails.table}.*,
+                                  ${SubCategory.table}.name as 'sub_category'
+                           FROM ${Ads.table}
+                                    JOIN ${AdsDetails.table} ON ${Ads.table}.id = ${AdsDetails.table}.ad_id
+                                    JOIN ${PriceDetails.table} ON ${Ads.table}.id = ${PriceDetails.table}.ad_id
+                                    JOIN ${SubCategory.table} ON ${Ads.table}.sub_category_id = ${SubCategory.table}.id
+                                    JOIN ${Advertisers.table} ON ${Ads.table}.user_id = ${Advertisers.table}.user_id
+                           WHERE ${Ads.table}.is_approved = 1`
+            db.query(query, (err, ads) => {
+                if (err) console.log(err)
+                res.send({results: ads})
+            })
+        },
+        pending(req, res) {
+            const query = `SELECT ${Ads.table}.*,
+                                  ${Advertisers.table}.*,
+                                  ${AdsDetails.table}.*,
+                                  ${PriceDetails.table}.*,
+                                  ${SubCategory.table}.name as 'sub_category'
+                           FROM ${Ads.table}
+                                    JOIN ${AdsDetails.table} ON ${Ads.table}.id = ${AdsDetails.table}.ad_id
+                                    JOIN ${PriceDetails.table} ON ${Ads.table}.id = ${PriceDetails.table}.ad_id
+                                    JOIN ${SubCategory.table} ON ${Ads.table}.sub_category_id = ${SubCategory.table}.id
+                                    JOIN ${Advertisers.table} ON ${Ads.table}.user_id = ${Advertisers.table}.user_id
+                           WHERE ${Ads.table}.is_approved = 0`
+            db.query(query, (err, ads) => {
+                if (err) console.log(err)
+                res.send({results: ads})
+            })
+        },
+        top(req, res) {
+            const query = `SELECT ${Ads.table}.*,
+                                  ${Advertisers.table}.*,
+                                  ${AdsDetails.table}.*,
+                                  ${PriceDetails.table}.*,
+                                  ${SubCategory.table}.name as 'sub_category'
+                           FROM ${Ads.table}
+                                    JOIN ${AdsDetails.table} ON ${Ads.table}.id = ${AdsDetails.table}.ad_id
+                                    JOIN ${PriceDetails.table} ON ${Ads.table}.id = ${PriceDetails.table}.ad_id
+                                    JOIN ${SubCategory.table} ON ${Ads.table}.sub_category_id = ${SubCategory.table}.id
+                                    JOIN ${Advertisers.table} ON ${Ads.table}.user_id = ${Advertisers.table}.user_id
+                           WHERE ${Ads.table}.is_top = 1`
+            db.query(query, (err, ads) => {
+                if (err) console.log(err)
+                res.send({results: ads})
+            })
+        },
+        hidden(req, res) {
+            const query = `SELECT ${Ads.table}.*,
+                                  ${Advertisers.table}.*,
+                                  ${AdsDetails.table}.*,
+                                  ${PriceDetails.table}.*,
+                                  ${SubCategory.table}.name as 'sub_category'
+                           FROM ${Ads.table}
+                                    JOIN ${AdsDetails.table} ON ${Ads.table}.id = ${AdsDetails.table}.ad_id
+                                    JOIN ${PriceDetails.table} ON ${Ads.table}.id = ${PriceDetails.table}.ad_id
+                                    JOIN ${SubCategory.table} ON ${Ads.table}.sub_category_id = ${SubCategory.table}.id
+                                    JOIN ${Advertisers.table} ON ${Ads.table}.user_id = ${Advertisers.table}.user_id
+                           WHERE ${Ads.table}.is_deleted = 1`
+            db.query(query, (err, ads) => {
+                if (err) console.log(err)
+                res.send({results: ads})
+            })
+        },
     }
 }
 
