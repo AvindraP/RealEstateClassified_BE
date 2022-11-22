@@ -74,7 +74,8 @@ const Field = {
             const id = req.params.id
             const query = `SELECT *
                            FROM ${Field.table}
-                           WHERE sub_category_id = ${id} AND is_active = 1`
+                           WHERE sub_category_id = ${id}
+                             AND is_active = 1`
             db.query(query, (err, fields) => {
                 if (err) console.log(err)
                 else res.send({results: fields})
@@ -109,10 +110,10 @@ const Field = {
 
     status(req, res) {
         const id = req.params.id
-        if (req.params.status === "true") status.active(id, Field.table, (response) => {
+        if (req.params.status === "true") status.active(id, Field.table, 'is_active', (response) => {
             res.send({message: "activated"})
         })
-        else status.block(id, Field.table, (response) => {
+        else status.block(id, Field.table, 'is_active', (response) => {
             res.send({message: "blocked"})
         })
     },
