@@ -143,6 +143,7 @@ const Ads = {
                 res.send({results: ads})
             })
         },
+
         hidden(req, res) {
             const query = `SELECT ${Ads.table}.*,
                                   ${Advertisers.table}.*,
@@ -154,7 +155,7 @@ const Ads = {
                                     JOIN ${PriceDetails.table} ON ${Ads.table}.id = ${PriceDetails.table}.ad_id
                                     JOIN ${SubCategory.table} ON ${Ads.table}.sub_category_id = ${SubCategory.table}.id
                                     JOIN ${Advertisers.table} ON ${Ads.table}.user_id = ${Advertisers.table}.user_id
-                           WHERE ${Ads.table}.is_deleted = 1`
+                           WHERE ${Ads.table}.is_hidden = 1`
             db.query(query, (err, ads) => {
                 if (err) console.log(err)
                 res.send({results: ads})
@@ -193,7 +194,18 @@ const Ads = {
         else status.block(id, Ads.table, 'is_top', (response) => {
             res.send({message: 'not top'})
         })
-    }
+    },
+
+    hide(req, res) {
+        const id = req.params.id
+        const hide = req.params.hide_status
+        if (hide === 'true') status.active(id, Ads.table, 'is_hidden', (response) => {
+            res.send({message: 'approved'})
+        })
+        else status.block(id, Ads.table, 'is_hidden', (response) => {
+            res.send({message: 'not approved'})
+        })
+    },
 }
 
 export default Ads

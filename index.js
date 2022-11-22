@@ -78,6 +78,7 @@ app.get("/ads/hidden", Ads.get.hidden)
 app.get("/ads/approve/:id/:approve_status", Ads.approve)
 app.get("/ads/publish/:id/:publish_status", Ads.publish)
 app.get("/ads/top/:id/:top_status", Ads.top)
+app.get("/ads/hide/:id/:hide_status", Ads.hide)
 
 app.listen("8001", () => {
     console.log("connected!");
