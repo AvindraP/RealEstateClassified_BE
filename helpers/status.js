@@ -1,9 +1,9 @@
 import db from '../config/DB.js'
 
 const status = {
-    block(id, table, callBack) {
+    block(id, table, column, callBack) {
         const query = `UPDATE ${table}
-                       SET is_active=0
+                       SET ${column}=0
                        WHERE id = ${id}`
         db.query(query, (err, result) => {
             if (err) console.log(err)
@@ -11,9 +11,9 @@ const status = {
         })
     },
 
-    active(id, table, callBack) {
+    active(id, table, column, callBack) {
         const query = `UPDATE ${table}
-                       SET is_active=1
+                       SET ${column}=1
                        WHERE id = ${id}`
         db.query(query, (err, result) => {
             if (err) console.log(err)

@@ -177,11 +177,10 @@ const Category = {
 
     status(req, res) {
         const id = req.params.id
-        console.log(req.params.status)
-        if (req.params.status === "true") status.active(id, Category.table, (response) => {
+        if (req.params.status === "true") status.active(id, Category.table, 'is_active', (response) => {
             res.send({message: "activated"})
         })
-        else status.block(id, Category.table, (response) => {
+        else status.block(id, Category.table, 'is_active', (response) => {
             res.send({message: "blocked"})
         })
     }

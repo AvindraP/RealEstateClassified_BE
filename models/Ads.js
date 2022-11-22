@@ -4,6 +4,7 @@ import AdsDetails from "./AdsDetails.js";
 import PriceDetails from "./PriceDetails.js";
 import SubCategory from "./SubCategory.js";
 import Advertisers from "./Advertisers.js";
+import status from "../helpers/status.js";
 
 const Ads = {
     table: "ads",
@@ -159,6 +160,39 @@ const Ads = {
                 res.send({results: ads})
             })
         },
+    },
+
+    approve(req, res) {
+        const id = req.params.id
+        const approve = req.params.approve_status
+        if (approve === 'true') status.active(id, Ads.table, 'is_approved', (response) => {
+            res.send({message: 'approved'})
+        })
+        else status.block(id, Ads.table, 'is_approved', (response) => {
+            res.send({message: 'not approved'})
+        })
+    },
+
+    publish(req, res) {
+        const id = req.params.id
+        const publish = req.params.publish_status
+        if (publish === 'true') status.active(id, Ads.table, 'is_published', (response) => {
+            res.send({message: 'published'})
+        })
+        else status.block(id, Ads.table, 'is_published', (response) => {
+            res.send({message: 'not published'})
+        })
+    },
+
+    top(req, res) {
+        const id = req.params.id
+        const top = req.params.top_status
+        if (top === 'true') status.active(id, Ads.table, 'is_top', (response) => {
+            res.send({message: 'top add'})
+        })
+        else status.block(id, Ads.table, 'is_top', (response) => {
+            res.send({message: 'not top'})
+        })
     }
 }
 
