@@ -30,8 +30,9 @@ const Ads = {
     },
 
     insert(data, callBack) {
-        const query = `INSERT INTO ${Ads.table} (\`city_id\`, \`user_id\`, \`sub_category_id\`, \`offer_type\`)
-                       VALUES (${data.city_id}, ${data.user_id}, ${data.sub_category_id}, ${data.offer_type})`
+        const query = `INSERT INTO ${Ads.table} (\`city_id\`, \`user_id\`, \`sub_category_id\`, \`offer_type\`,
+                                                 \`user_active_type\`)
+                       VALUES (${data.city_id}, ${data.user_id}, ${data.sub_category_id}, ${data.offer_type}, ${data.user_active_type})`
         db.query(query, (err, results) => {
             if (err) console.log(err)
             else {
@@ -53,6 +54,24 @@ const Ads = {
                                     JOIN ${PriceDetails.table} ON ${Ads.table}.id = ${PriceDetails.table}.ad_id
                                     JOIN ${SubCategory.table} ON ${Ads.table}.sub_category_id = ${SubCategory.table}.id
                                     JOIN ${Advertisers.table} ON ${Ads.table}.user_id = ${Advertisers.table}.user_id`
+            db.query(query, (err, ads) => {
+                if (err) console.log(err)
+                res.send({results: ads})
+            })
+        },
+        one(req, res) {
+            const id = req.params.id
+            const query = `SELECT ${Ads.table}.*,
+                                  ${Advertisers.table}.*,
+                                  ${AdsDetails.table}.*,
+                                  ${PriceDetails.table}.*,
+                                  ${SubCategory.table}.name as 'sub_category'
+                           FROM ${Ads.table}
+                                    JOIN ${AdsDetails.table} ON ${Ads.table}.id = ${AdsDetails.table}.ad_id
+                                    JOIN ${PriceDetails.table} ON ${Ads.table}.id = ${PriceDetails.table}.ad_id
+                                    JOIN ${SubCategory.table} ON ${Ads.table}.sub_category_id = ${SubCategory.table}.id
+                                    JOIN ${Advertisers.table} ON ${Ads.table}.user_id = ${Advertisers.table}.user_id
+                           WHERE ${Ads.table}.id = ${id}`
             db.query(query, (err, ads) => {
                 if (err) console.log(err)
                 res.send({results: ads})

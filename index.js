@@ -69,6 +69,7 @@ app.get("/field/require/:id/:status", Field.require)
 // ads
 app.post("/ads", upload.any("images"), Ads.create)
 app.get("/ads", Ads.get.all)
+app.get("/ad/:id", Ads.get.one)
 app.get("/ads/published", Ads.get.published)
 app.get("/ads/un-published", Ads.get.unPublished)
 app.get("/ads/approved", Ads.get.approved)
