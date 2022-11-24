@@ -11,6 +11,21 @@ const AdsDetails = {
             if (err) console.log(err)
             else callBack(true)
         })
+    },
+
+    update(data, callBack) {
+        const query = `UPDATE ${AdsDetails.table}
+                       SET title       = '${data.title}',
+                           description = '${data.description}',
+                           contact     = '${data.contact}',
+                           fields      = '${data.fields}',
+                           images      = '${data.images}',
+                           amenities   = '${data.amenities}'
+                       WHERE ad_id = ${data.ad_id}`
+        db.query(query, (err, update) => {
+            if (err) console.log(err)
+            update.affectedRows === 1 ? callBack(true) : callBack(false)
+        })
     }
 }
 

@@ -68,6 +68,7 @@ app.get("/field/require/:id/:status", Field.require)
 
 // ads
 app.post("/ads", upload.any("images"), Ads.create)
+app.post("/ads/update", upload.any("images"), Ads.patch)
 app.get("/ads", Ads.get.all)
 app.get("/ad/:id", Ads.get.one)
 app.get("/ads/published", Ads.get.published)
@@ -80,6 +81,7 @@ app.get("/ads/approve/:id/:approve_status", Ads.approve)
 app.get("/ads/publish/:id/:publish_status", Ads.publish)
 app.get("/ads/top/:id/:top_status", Ads.top)
 app.get("/ads/hide/:id/:hide_status", Ads.hide)
+app.get("/ads-image/:image", Upload.show)
 
 app.listen("8001", () => {
     console.log("connected!");
