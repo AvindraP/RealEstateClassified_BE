@@ -14,16 +14,20 @@ const Field = {
 
     create(req, res) {
         const field = req.body
-        Field.insert(field, (response) => {
-            response
-                ? res.status(200).send({message: "success", results: response})
-                : res
-                    .status(500)
-                    .send({message: "Error, something went wrong"});
+        const subCategories = field.sub_categories
+        Field.multipleInsert(subCategories, field)
+        res.send({message: 'success', results: []})
+    },
+
+    multipleInsert(subCategories, field) {
+        subCategories.forEach(subCategory => {
+            delete field.sub_categories
+            field.sub_category_id = subCategory
+            this.insert(field)
         })
     },
 
-    insert(data, callBack) {
+    insert(data) {
         let keys = Object.keys(data);
         const arr = [];
         keys.forEach((key) => {
@@ -41,7 +45,7 @@ const Field = {
                                WHERE ${Field.table}.id = ${id}`
                 db.query(query, (err, results) => {
                     if (err) console.log(err)
-                    else callBack(results)
+                    else return results
                 })
             }
         });
