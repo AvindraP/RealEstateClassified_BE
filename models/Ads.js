@@ -11,7 +11,7 @@ const Ads = {
 
     create(req, res) {
         const ads = req.body
-        Upload.images(req.files, 'ads-path/', (fileNames) => {
+        Upload.images(req.files, 'ads-image/', (fileNames) => {
             if (fileNames.length === req.files.length) {
                 ads.images = JSON.stringify(fileNames)
                 Ads.insert(ads, (response) => {
@@ -26,6 +26,39 @@ const Ads = {
                     })
                 })
             }
+        })
+    },
+
+    patch(req, res) {
+        const ads = req.body
+        Upload.images(req.files, 'ads-image/', (fileNames) => {
+            if (fileNames.length === req.files.length) {
+                ads.images = JSON.stringify(fileNames)
+                Ads.update(ads, (adsResponse) => {
+                    if (adsResponse) {
+                        AdsDetails.update(ads, (detailResponse) => {
+                            if (detailResponse) {
+                                PriceDetails.update(ads, (response) => {
+                                    if (response) res.send({message: "success"})
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    },
+
+    update(data, callBack) {
+        const query = `UPDATE ${Ads.table}
+                       SET city_id          = ${data.city_id},
+                           sub_category_id  = ${data.sub_category_id},
+                           offer_type       = ${data.offer_type},
+                           user_active_type = ${data.user_active_type}
+                       WHERE id = ${data.ad_id}`
+        db.query(query, (err, update) => {
+            if (err) console.log(err)
+            update.affectedRows === 1 ? callBack(true) : callBack(false)
         })
     },
 
