@@ -9,7 +9,9 @@ import multer from "multer";
 import Upload from "./helpers/upload.js";
 import Field from "./models/Field.js";
 import Ads from "./models/Ads.js";
+import User from "./models/User.js";
 import Banner from "./models/Banner.js";
+import Auth from "./models/Auth.js";
 
 const app = express();
 app.use(
@@ -21,6 +23,11 @@ app.use(
 );
 app.use(express.json());
 const upload = multer({ dest: "uploads/" });
+
+// login
+app.post("/login", Auth.login);
+// register
+app.post("/register", User.create);
 
 // category
 app.post("/category", upload.single("image"), Category.create);
