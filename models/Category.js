@@ -15,26 +15,20 @@ const Category = {
 	},
 
 	create(req, res) {
-		const category = req.body;
-		validate.unique("name", Category.table, category.name, (response) => {
+		const _category = req.body;
+		validate.unique("name", Category.table, _category.name, (response) => {
 			!response
 				? Upload.image(req.file, (fileName) => {
-						const categories = req.body;
-						category["image"] = "category-image/" + fileName;
-						Category.insert(categories, (response) => {
+						_category["image"] = "category-image/" + fileName;
+						Category.insert(_category, (response) => {
 							response
-								? res
-										.status(200)
-										.send({
-											message: "success",
-											results: response,
-										})
-								: res
-										.status(500)
-										.send({
-											message:
-												"Error, something went wrong",
-										});
+								? res.status(200).send({
+										message: "success",
+										results: response,
+								  })
+								: res.status(500).send({
+										message: "Error, something went wrong",
+								  });
 						});
 				  })
 				: res
@@ -45,40 +39,19 @@ const Category = {
 
 	insert(data, callBack) {
 		let keys = Object.keys(data);
-		const arr = [];
-		keys.forEach((key) => {
-			arr.push(data[key]);
-		});
+		const arr = keys.map((k) => data[k]);
 		const query = `INSERT INTO ${Category.table} (${keys.toString()})
                        VALUES (?, ?, ?, ?, ?, ?)`;
 		db.query(query, arr, (err, result) => {
 			if (err) console.log(err);
 			else {
-				const id = result.insertId;
 				const query = `SELECT *
                                FROM ${Category.table}
-                               WHERE id = ${id}`;
+                               WHERE id = ${result.insertId}`;
 				db.query(query, (err, categories) => {
 					if (err) console.log(err);
 					else {
-						const query = `SELECT *
-                                       FROM ${SubCategory.table}`;
-						db.query(query, (err, subCategories) => {
-							categories.forEach((category) => {
-								const subCategoryIds =
-									category.sub_categories.split(",");
-								const arr = [];
-								subCategoryIds.forEach((id) => {
-									const index = subCategories.findIndex(
-										(sCat) => sCat.id === parseInt(id)
-									);
-									index >= 0 &&
-										arr.push(subCategories[index]);
-								});
-								category.sub_categories = arr;
-							});
-							callBack(categories);
-						});
+						callBack(categories);
 					}
 				});
 			}
@@ -159,25 +132,18 @@ const Category = {
 										"category-image/" + fileName;
 									Category.update(category, (response) => {
 										response
-											? res
-													.status(200)
-													.send({
-														message: "success",
-													})
-											: res
-													.status(500)
-													.send({
-														message:
-															"Error, something went wrong",
-													});
+											? res.status(200).send({
+													message: "success",
+											  })
+											: res.status(500).send({
+													message:
+														"Error, something went wrong",
+											  });
 									});
 							  })
-							: res
-									.status(500)
-									.send({
-										message:
-											"this name has already been taken",
-									});
+							: res.status(500).send({
+									message: "this name has already been taken",
+							  });
 					},
 					req.body.id
 			  )
@@ -192,19 +158,14 @@ const Category = {
 										? res
 												.status(200)
 												.send({ message: "success" })
-										: res
-												.status(500)
-												.send({
-													message:
-														"Error, something went wrong",
-												});
+										: res.status(500).send({
+												message:
+													"Error, something went wrong",
+										  });
 							  })
-							: res
-									.status(500)
-									.send({
-										message:
-											"this name has already been taken",
-									});
+							: res.status(500).send({
+									message: "this name has already been taken",
+							  });
 					},
 					req.body.id
 			  );
