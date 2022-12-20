@@ -39,9 +39,10 @@ const Category = {
 
 	insert(data, callBack) {
 		let keys = Object.keys(data);
-		const arr = keys.map((k) => data[k]);
+		const arr = keys.map((k) => (data[k] === "null" ? null : data[k]));
+		const placeholders = keys.map(() => "?").toString();
 		const query = `INSERT INTO ${Category.table} (${keys.toString()})
-                       VALUES (?, ?, ?, ?, ?, ?)`;
+                       VALUES (${placeholders})`;
 		db.query(query, arr, (err, result) => {
 			if (err) console.log(err);
 			else {
