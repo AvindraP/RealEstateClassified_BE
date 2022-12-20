@@ -187,7 +187,7 @@ const Category = {
 	},
 
 	delete(req, res) {
-		const id = req.body.id;
+		const id = req.params.id;
 		let query = `UPDATE ${Category.table}
                      SET is_deleted = 1
                      WHERE id = ${id}`;
