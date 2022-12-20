@@ -56,7 +56,7 @@ const Category = {
 			const query = `
 			SELECT p.*, s.name parent_name 
 			FROM categories p, categories s
-			WHERE p.id = s.id`;
+			WHERE p.id = s.id AND p.is_deleted = 0`;
 			db.query(query, (err, categories) => {
 				if (err) console.log(err);
 				else {
