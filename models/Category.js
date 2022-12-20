@@ -54,7 +54,7 @@ const Category = {
 	get: {
 		all(_req, res) {
 			const query = `
-			SELECT p.*, s.name parentName 
+			SELECT p.*, s.name parent_name 
 			FROM categories p, categories s
 			WHERE p.id = s.id`;
 			db.query(query, (err, categories) => {
@@ -96,7 +96,7 @@ const Category = {
 
 		_one(id, cb) {
 			const query = `
-			SELECT p.*, s.name parentName 
+			SELECT p.*, s.name parent_name 
 			FROM categories p, categories s
 			WHERE p.id = s.id && p.id = ${id}`;
 			db.query(query, (err, categories) => {
