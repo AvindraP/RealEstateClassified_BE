@@ -46,44 +46,21 @@ const Category = {
 		db.query(query, arr, (err, result) => {
 			if (err) console.log(err);
 			else {
-				const query = `SELECT *
-                               FROM ${Category.table}
-                               WHERE id = ${result.insertId}`;
-				db.query(query, (err, categories) => {
-					if (err) console.log(err);
-					else {
-						callBack(categories);
-					}
-				});
+				Category.get._one(result.insertId, callBack);
 			}
 		});
 	},
 
 	get: {
-		all(req, res) {
-			const query = `SELECT *
-                           FROM ${Category.table}
-                           WHERE is_deleted = 0`;
+		all(_req, res) {
+			const query = `
+			SELECT p.*, s.name parentName 
+			FROM categories p, categories s
+			WHERE p.id = s.id`;
 			db.query(query, (err, categories) => {
 				if (err) console.log(err);
 				else {
-					const query = `SELECT *
-                                   FROM ${SubCategory.table}`;
-					db.query(query, (err, subCategories) => {
-						categories.forEach((category) => {
-							const subCategoryIds =
-								category.sub_categories.split(",");
-							const arr = [];
-							subCategoryIds.forEach((id) => {
-								const index = subCategories.findIndex(
-									(sCat) => sCat.id === parseInt(id)
-								);
-								index >= 0 && arr.push(subCategories[index]);
-							});
-							category.sub_categories = arr;
-						});
-						res.send({ results: categories });
-					});
+					res.send({ results: categories });
 				}
 			});
 		},
@@ -113,6 +90,19 @@ const Category = {
 						});
 						res.send({ results: categories });
 					});
+				}
+			});
+		},
+
+		_one(id, cb) {
+			const query = `
+			SELECT p.*, s.name parentName 
+			FROM categories p, categories s
+			WHERE p.id = s.id && p.id = ${id}`;
+			db.query(query, (err, categories) => {
+				if (err) console.log(err);
+				else {
+					cb(categories.length > 0 ? categories[0] : null);
 				}
 			});
 		},
