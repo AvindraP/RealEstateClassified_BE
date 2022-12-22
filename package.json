@@ -25,5 +25,8 @@
     "nodemon": "^2.0.16",
     "request": "^2.88.2",
     "shoutout-sdk": "^3.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.17"
   }
 }

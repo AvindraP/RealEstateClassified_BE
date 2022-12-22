@@ -15,11 +15,11 @@ import Auth from "./models/Auth.js";
 
 const app = express();
 app.use(
-  cors({
-    credentials: true,
-    origin: "http://localhost:3000",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  })
+	cors({
+		credentials: true,
+		origin: "http://localhost:3000",
+		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+	})
 );
 app.use(express.json());
 const upload = multer({ dest: "uploads/" });
@@ -37,7 +37,7 @@ app.get("/category/status/:id/:status", Category.status);
 app.get("/category", Category.get.all);
 app.get("/category/:id", Category.get.one);
 app.get("/category-image/:image", Upload.show);
-app.delete("/category", Category.delete);
+app.delete("/category/:id", Category.delete);
 
 // sub category
 app.post("/sub-category", SubCategory.create);
@@ -99,5 +99,5 @@ app.get("/ads/hide/:id/:hide_status", Ads.hide);
 app.get("/ads-image/:image", Upload.show);
 
 app.listen("8001", () => {
-  console.log("connected!");
+	console.log("connected!");
 });
